@@ -1,0 +1,39 @@
+<h1 class="mat-display-1">Create a New Palette</h1>
+
+<form [formGroup]="paletteCreationForm">
+
+  <mat-form-field>
+    <input matInput formControlName="themeName" placeholder="Theme Name">
+  </mat-form-field>
+
+  <!-- https://blog.karmacomputing.co.uk/angular-6-dynamically-add-rows-reactive-forms-how-to/ -->
+  <div formArrayName="colors">
+
+    <div *ngFor="let i of colors.controls; let colorIndex = index" [formGroupName]="colorIndex">
+      <label class="mat-body-1">
+        Color {{ colorIndex + 1 }}:
+        <input
+          (colorPickerChange)="getColor(colorIndex, $event)"
+          [value]="colors[colorIndex]"
+          [style.background]="colors[colorIndex]"
+          [(colorPicker)]="colors[colorIndex]"
+          formControlName="color"
+        />
+      </label>
+      <button mat-icon-button *ngIf="colorIndex>2" (click)="removeColorPicker(colorIndex)">
+        <mat-icon aria-label="Icon-button with clear icon">clear</mat-icon>
+      </button>
+    </div>
+
+    <button mat-icon-button color="primary" *ngIf="count<5" (click)="addColorPicker()">
+      <mat-icon aria-label="Icon-button with add icon">add</mat-icon> Add Color
+    </button>
+
+  </div>
+  <div>
+    <button mat-raised-button color="primary" (click)="onSubmit()">SAVE</button>
+    <button mat-raised-button (click)="onClear()">CLEAR</button>
+  </div>
+</form>
+
+{{ this.paletteCreationForm.value | json }}
